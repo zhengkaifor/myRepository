@@ -1,0 +1,87 @@
+begin
+	declare vDeviceID bigint(12);
+	declare vTerminalID bigint(12);
+	declare vSensorGroupID int;
+	declare vCommandID bigint(12);
+	DECLARE s int default 0;
+	DECLARE t int default 0;
+	DECLARE vSensorId BIGINT(12);
+	DECLARE vSensorNo BIGINT(12);
+	declare vValueID bigint(12);
+	declare vValueID1 bigint(12);
+	DECLARE vSensorName VARCHAR(255);
+  
+	-- 声明游标结束判断变量，默认值为FALSE;
+  DECLARE fetchSeqOk boolean DEFAULT FALSE;
+
+	
+	
+
+  #设置光标
+  DECLARE cursor_deviceId CURSOR FOR SELECT device_id from device_info where device_name LIKE '%农科院脚本测试%';
+	DECLARE cursor_terminalId CURSOR FOR SELECT terminal_id from terminal_info where device_id =vDeviceID;
+	DECLARE cursor_commandId CURSOR FOR SELECT command_id from terminal_modbus_command where terminal_id =vTerminalID;
+
+	
+	
+	-- 在MySql中，造成游标溢出时会引发mysql预定义的NOT FOUND错误，
+  -- 所以在上面代码中指定了当引发not found错误时定义一个continue 的事件
+  DECLARE CONTINUE HANDLER FOR NOT FOUND set fetchSeqOk = true;
+
+
+
+
+  
+  
+
+
+  OPEN cursor_deviceId;
+	loop_cursor : LOOP
+			FETCH cursor_deviceId INTO vDeviceID;
+			SELECT vDeviceID,s;
+			IF fetchSeqOk THEN
+					SELECT fetchSeqOk; 
+					LEAVE loop_cursor;
+      END IF;
+			set s=s+1;
+			OPEN cursor_terminalId;
+			inner_loop : LOOP
+            fetch cursor_terminalId into vTerminalID;
+            IF fetchSeqOk THEN
+            LEAVE inner_loop;
+            END IF;
+						select vTerminalID;
+						UPDATE terminal_info set protocol_type =7 where terminal_id =vTerminalID;
+						OPEN cursor_commandId;
+						next_loop : LOOP
+									FETCH cursor_commandId into vCommandID;
+									SELECT vCommandID,fetchSeqOk;
+									IF fetchSeqOk THEN
+									LEAVE next_loop;
+									END IF;
+									delete from sensor_modbus_value_cfg where command_id=vCommandID;
+									delete from sensor_nongkeyuan_value_cfg where command_id=vCommandID;
+						END LOOP next_loop;
+						CLOSE cursor_commandId;
+						SET fetchSeqOk = false;
+						select fetchSeqOk;
+            delete from terminal_modbus_command where terminal_id=vTerminalID;
+						delete from terminal_nongkeyuan_command where terminal_id=vTerminalID;
+						INSERT INTO `iot_data_center_db`.`terminal_nongkeyuan_command` ( `command_name`, `terminal_id`, `slave_id`, `func_id`, `start_reg`, `length`, `interval_time`, `type`, `status`) VALUES ( '读第一个采集器', vTerminalID, '20', '4', '11', '20', NULL, '0', '1');
+						INSERT INTO `iot_data_center_db`.`terminal_nongkeyuan_command` ( `command_name`, `terminal_id`, `slave_id`, `func_id`, `start_reg`, `length`, `interval_time`, `type`, `status`) VALUES ('读第二个采集器', vTerminalID, '20', '4', '31', '20', NULL, '0', '1');
+						INSERT INTO `iot_data_center_db`.`terminal_nongkeyuan_command` ( `command_name`, `terminal_id`, `slave_id`, `func_id`, `start_reg`, `length`, `interval_time`, `type`, `status`) VALUES ( '读第三个采集器', vTerminalID, '20', '4', '51', '20', NULL, '0', '1');
+						INSERT INTO `iot_data_center_db`.`terminal_nongkeyuan_command` ( `command_name`, `terminal_id`, `slave_id`, `func_id`, `start_reg`, `length`, `interval_time`, `type`, `status`) VALUES ( '读第四个采集器', vTerminalID, '20', '4', '71', '20', NULL, '0', '1');
+						INSERT INTO `iot_data_center_db`.`terminal_nongkeyuan_command` (`command_name`, `terminal_id`, `slave_id`, `func_id`, `start_reg`, `length`, `interval_time`, `type`, `status`) VALUES ( '读第五个采集器', vTerminalID, '20', '4', '91', '20', NULL, '0', '1');
+						INSERT INTO `iot_data_center_db`.`terminal_nongkeyuan_command` (`command_name`, `terminal_id`, `slave_id`, `func_id`, `start_reg`, `length`, `interval_time`, `type`, `status`) VALUES ( '读第一个控制器', vTerminalID, '20', '1', '11', '10', NULL, '0', '1');
+						INSERT INTO `iot_data_center_db`.`terminal_nongkeyuan_command` ( `command_name`, `terminal_id`, `slave_id`, `func_id`, `start_reg`, `length`, `interval_time`, `type`, `status`) VALUES ('读第二个控制器', vTerminalID, '20', '1', '21', '10', NULL, '0', '1');
+						INSERT INTO `iot_data_center_db`.`terminal_nongkeyuan_command` (`command_name`, `terminal_id`, `slave_id`, `func_id`, `start_reg`, `length`, `interval_time`, `type`, `status`) VALUES ('读第三个控制器', vTerminalID, '20', '1', '31', '10', NULL, '0', '1');
+						
+					
+      END LOOP inner_loop;
+			CLOSE cursor_terminalId;
+			SET fetchSeqOk = false;
+  END LOOP loop_cursor;
+	COMMIT; -- 正常执行完，commit
+	CLOSE cursor_deviceId;
+  
+end
