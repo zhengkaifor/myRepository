@@ -158,10 +158,6 @@ networks:
 
 docker-compose -f redis-compose.yml up -d
 
-docker exec -it redis-7010 redis-cli -p 7010
-
-![1547692248581](C:\Users\zk\AppData\Local\Temp\1547692248581.png)
-
-cluster create 172.18.0.10:7010 172.18.0.11:7011 172.18.0.12:7012 172.18.0.13:7013 172.18.0.14:7014 172.18.0.15:7015 --cluster-replicas 1
+docker exec -it redis-7010 redis-cli -p 7010 --cluster create 172.18.0.10:7010 172.18.0.11:7011 172.18.0.12:7012 172.18.0.13:7013 172.18.0.14:7014 172.18.0.15:7015 --cluster-replicas 1
 
 集群化完成.
