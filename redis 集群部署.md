@@ -4,9 +4,13 @@
 
 ##### 创建一个集群配置最小模板
 
-   touch redis-cluster.tmpl
+mkdir redis-cluster
 
-   vi redis-cluster.tmpl
+cd redis-cluster
+
+touch redis-cluster.tmpl
+
+vi redis-cluster.tmpl
 
  ##节点端口
 
@@ -39,9 +43,9 @@ cluster-announce-bus-port 1${PORT}
 
 appendonly yes
 
-##### 创建redis-cluster文件夹.用来存放6个redis实例配置与数据
+##### 创建各个实例文件夹.用来存放6个redis实例配置与数据
 
-mkdir redis-cluster
+
 
 执行
 
@@ -57,7 +61,7 @@ for port in `seq 7010 7015`; do   mkdir -p ./${port}/conf   && PORT=${port} envs
 
 执行
 
-​	docker network create redis-net
+docker network create redis-net
 
 
 
