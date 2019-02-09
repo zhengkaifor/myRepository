@@ -1,0 +1,27 @@
+链接: http://pan.baidu.com/s/1gfmJFSB 密码: hh7s  //PPT资源
+
+cvs/svn账号:zhengkai  zk0619		
+Jenkins:zhengkai  zhengkai   超级管理员:administrator newload_iot
+opensips服务器:root test_1234  外网地址:211.138.144.25 内网地址:10.1.0.137   tcpdump命令:tcpdump -X -s 0 -w tcpdumpfile udp port 5060
+			   sips test_1234
+rtpproxy -A 211.138.144.25 -l 10.1.0.137 -s udp:10.1.0.137:22222 -F -d INFO LOG_LOCAL0
+			   
+
+生产环境账号:http://218.207.182.233:9103/iotPortalWeb/   iot_test  iot_test_newland
+
+NVR:211.143.152.96 admin abc12345
+IPCamare:10.1.5.71 admin Newland_12345
+10.1.5.70 admin abc12345
+10.1.5.79:root zhaozb_root		mediasvr zhaozb123456     nl@160325_14
+10.1.0.156:root nl@160325_14		datacenter datacenter
+生产linux:用户:aiot_intf 密码:nL_@IoT_Intf_2017
+10.1.7.142 iotweb Nl_IotwEb
+ 
+http://211.143.152.96:8080/doc/page/preview.asp
+http://10.1.5.71/doc/page/login.asp?anonymous=true
+
+待连接的设备ip：192.168.20.100  端口：8000 用户名: admin  密码：abcd1234 品牌=1
+
+http://trace.qrclub.com.cn/race_portal/web
+
+mvn package -DskipTests
